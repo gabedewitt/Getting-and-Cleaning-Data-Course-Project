@@ -50,28 +50,28 @@ train_merged <- cbind(arrange(merge(cbind(sub_train,y_train),act_labels), by = s
 
 # Binding the two datasets together and removing the label column that was used
 # To match descriptive activity names to name the activities in the data set
+# And each variable is given descriptive names 
 
 df_tidy <- rbind(test_merged,train_merged)
 df_tidy$activity_label <- NULL
+names(df_tidy)<-gsub("Acc", "Accelerometer", names(df_tidy))
+names(df_tidy)<-gsub("Gyro", "Gyroscope", names(df_tidy))
+names(df_tidy)<-gsub("BodyBody", "Body", names(df_tidy))
+names(df_tidy)<-gsub("Mag", "Magnitude", names(df_tidy))
+names(df_tidy)<-gsub("^t", "Time_", names(df_tidy))
+names(df_tidy)<-gsub("^f", "Frequency_", names(df_tidy))
+names(df_tidy)<-gsub("tBody", "Timebody_", names(df_tidy))
+names(df_tidy)<-gsub("-mean()", "Mean", names(df_tidy))
+names(df_tidy)<-gsub("-std()", "STD", names(df_tidy), ignore.case = TRUE)
+names(df_tidy)<-gsub("-freq()", "frequency_", names(df_tidy),)
+names(df_tidy)<-gsub("angle", "Angle", names(df_tidy))
+names(df_tidy)<-gsub("gravity", "Gravity", names(df_tidy))
 
 # From the tidy data set, an independent second data set is created 
 # With the average of each variable for each activity and each subject
-# And each variable is given descriptive names 
 # Finally it's written to the working directory as the tidydata.txt file
 
 df_tidy2<-aggregate(. ~subject_Id + activity, df_tidy, mean)
 df_tidy2<-df_tidy2[order(df_tidy2$subject_Id,df_tidy2$activity),]
-names(df_tidy2)<-gsub("Acc", "Accelerometer", names(df_tidy2))
-names(df_tidy2)<-gsub("Gyro", "Gyroscope", names(df_tidy2))
-names(df_tidy2)<-gsub("BodyBody", "Body", names(df_tidy2))
-names(df_tidy2)<-gsub("Mag", "Magnitude", names(df_tidy2))
-names(df_tidy2)<-gsub("^t", "Time_", names(df_tidy2))
-names(df_tidy2)<-gsub("^f", "Frequency_", names(df_tidy2))
-names(df_tidy2)<-gsub("tBody", "Timebody_", names(df_tidy2))
-names(df_tidy2)<-gsub("-mean()", "Mean", names(df_tidy2))
-names(df_tidy2)<-gsub("-std()", "STD", names(df_tidy2), ignore.case = TRUE)
-names(df_tidy2)<-gsub("-freq()", "frequency_", names(df_tidy2),)
-names(df_tidy2)<-gsub("angle", "Angle", names(df_tidy2))
-names(df_tidy2)<-gsub("gravity", "Gravity", names(df_tidy2))
 setwd('..')
 write.table(df_tidy2, file = "tidydata.txt",row.name=FALSE)
