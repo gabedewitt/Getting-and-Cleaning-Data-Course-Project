@@ -36,17 +36,15 @@ sub_train <- read.table("./train/subject_train.txt", col.names = c("subject_Id")
 
 colnames(x_test) <- colnames(x_train) <- unlist(feature_names[2])
 
-#Extracting only the measurements on the mean and standard deviation for each measurement
-
-x_test <- x_test[grep("(M|m)ean|(S|s)td." ,names(x_test))]
-x_train <- x_train[grep("(M|m)ean|(S|s)td." ,names(x_train))]
 act_labels <- read.table("activity_labels.txt", col.names = c("activity_label","activity"))
 
 # Pre-merging the datasets into a test and a training datasets
+# While extracting only the measurements on the mean and 
+# standard deviation for each measurement
 # It might be useful to visualize the data if it's needed
 
-test_merged <- cbind(arrange(merge(cbind(sub_test,y_test),act_labels), by = subject_Id),x_test)
-train_merged <- cbind(arrange(merge(cbind(sub_train,y_train),act_labels), by = subject_Id),x_train)
+test_merged <- cbind(arrange(merge(cbind(sub_test,y_test),act_labels), by = subject_Id),x_test[grep("(M|m)ean|(S|s)td." ,names(x_test))])
+train_merged <- cbind(arrange(merge(cbind(sub_train,y_train),act_labels), by = subject_Id),x_train[grep("(M|m)ean|(S|s)td." ,names(x_train))])
 
 # Binding the two datasets together and removing the label column that was used
 # To match descriptive activity names to name the activities in the data set
